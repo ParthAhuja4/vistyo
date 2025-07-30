@@ -515,13 +515,10 @@ export class Service {
     }
   }
 
-  async createCheckoutSession() {
+  async createCheckoutSession(planType) {
     try {
-      const [plan, userId] = await Promise.all([
-        this.getUserPlan(),
-        this.getCurrentUserId(),
-      ]);
-      const payload = JSON.stringify({ userId, planType: plan });
+      const userId = await this.getCurrentUserId();
+      const payload = JSON.stringify({ userId, planType });
       const execution = await this.functions.createExecution(
         config.appwriteFunctionCreateSession,
         payload,

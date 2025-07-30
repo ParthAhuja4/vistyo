@@ -5,15 +5,15 @@ import service from "../appwrite/Databases.js";
 
 const Pricing = () => {
   const plan = useSelector((state) => state.auth.plan);
-  const [buying, setBuying] = useState(false);
+  const [buyingPlan, setBuyingPlan] = useState(null);
 
-  const handleSession = async () => {
+  const handleSession = async (planType) => {
     try {
-      setBuying(true);
-      await service.createCheckoutSession();
+      setBuyingPlan(planType);
+      await service.createCheckoutSession(planType);
     } catch (err) {
       alert("SERVER ERROR. TRY AGAIN LATER");
-      setBuying(false);
+      setBuyingPlan(null);
     }
   };
 
@@ -36,11 +36,15 @@ const Pricing = () => {
               "Unlimited Searches",
             ]}
             className="rounded-2xl bg-[#ffe6ec] text-[#2e2e2e] shadow-lg dark:bg-[#ad5165] dark:text-white"
-            onBuy={handleSession}
+            onBuy={() => handleSession("lite")}
             buttonLabel={
-              plan === "free" ? (buying ? "Buying..." : "BUY") : null
+              plan === "free"
+                ? buyingPlan === "lite"
+                  ? "Processing..."
+                  : "BUY"
+                : null
             }
-            disabled={buying}
+            disabled={buyingPlan === "lite"}
           />
 
           <PlanCard
@@ -54,15 +58,15 @@ const Pricing = () => {
               "Unlimited Searches",
             ]}
             className="rounded-2xl bg-[#e6e6ff] text-[#1e1e2e] shadow-lg dark:bg-[#2c2c7c] dark:text-white"
-            onBuy={handleSession}
+            onBuy={() => handleSession("pro")}
             buttonLabel={
               plan === "free" || plan === "lite"
-                ? buying
-                  ? "Buying..."
+                ? buyingPlan === "pro"
+                  ? "Processing..."
                   : "BUY"
                 : null
             }
-            disabled={buying}
+            disabled={buyingPlan === "pro"}
           />
 
           <PlanCard
@@ -78,11 +82,15 @@ const Pricing = () => {
               "Fast Customer Service",
             ]}
             className="rounded-2xl bg-[#fbe9c3] text-[#2e1d0f] shadow-lg dark:bg-[#ae9559] dark:text-white"
-            onBuy={handleSession}
+            onBuy={() => handleSession("unlimited")}
             buttonLabel={
-              plan !== "unlimited" ? (buying ? "Buying..." : "BUY") : null
+              plan !== "unlimited"
+                ? buyingPlan === "unlimited"
+                  ? "Processing..."
+                  : "BUY"
+                : null
             }
-            disabled={buying}
+            disabled={buyingPlan === "unlimited"}
           />
         </div>
 
