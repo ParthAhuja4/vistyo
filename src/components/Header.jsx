@@ -138,6 +138,14 @@ const Header = ({ home }) => {
             : "bg-gradient-to-r from-[#ff8ba0] to-[#b7bfff] text-[#2e2e2e]"
         }`}
       >
+        {home && (
+          <Link
+            to="/app/search"
+            className="flex items-center gap-1 hover:underline hover:opacity-90"
+          >
+            Go To App
+          </Link>
+        )}
         {!isLoggedIn ? (
           <>
             <Link
