@@ -103,7 +103,7 @@ export default function Home() {
                 "No Creator Q/A",
                 "No History",
                 "AI Filtering",
-                "Unlimied Searches",
+                "Unlimited Searches",
               ]}
               className="bg-[#ffe6ec] text-[#2e2e2e] dark:bg-[#ad5165] dark:text-white"
               onBuy={() => navigate("/app/pricing")}
@@ -116,7 +116,7 @@ export default function Home() {
                 "Creator Q/A Enabled",
                 "No History",
                 "AI Filtering",
-                "Unlimied Searches",
+                "Unlimited Searches",
               ]}
               className="bg-[#e6e6ff] text-[#1e1e2e] dark:bg-[#2c2c7c] dark:text-white"
               onBuy={() => navigate("/app/pricing")}
@@ -129,7 +129,7 @@ export default function Home() {
                 "Creator Q/A",
                 "History",
                 "AI Filtering",
-                "Unlimied Searches",
+                "Unlimited Searches",
                 "Special Membership Perks",
                 "Fast Customer Service",
               ]}

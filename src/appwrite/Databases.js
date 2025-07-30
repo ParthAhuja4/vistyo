@@ -1,16 +1,42 @@
 import config from "../config/config";
-import { ID, Databases, Query, Account } from "appwrite";
+import { ID, Databases, Query, Account, Functions } from "appwrite";
 import client from "./client";
 
 export class Service {
   client;
   databases;
   account;
+  functions;
 
   constructor() {
     this.client = client;
     this.databases = new Databases(this.client);
     this.account = new Account(this.client);
+    this.functions = new Functions(this.client);
+  }
+
+  async createCheckoutSession() {
+    try {
+      const [plan, userId] = await Promise.all([
+        this.getUserPlan(),
+        this.getCurrentUserId(),
+      ]);
+      const payload = JSON.stringify({ userId, planType: plan });
+      const execution = await this.functions.createExecution(
+        config.appwriteFunctionCreateSession,
+        payload,
+        true,
+      );
+      const response = JSON.parse(execution.response);
+      if (response.url) {
+        window.location.href = response.url;
+      } else {
+        throw new Error("Stripe URL not returned");
+      }
+    } catch (err) {
+      console.error("Checkout session error:", err);
+      throw err;
+    }
   }
 
   async getCurrentUserId() {

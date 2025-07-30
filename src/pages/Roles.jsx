@@ -214,7 +214,7 @@ function Roles() {
                 Channel IDs
               </label>
               <a
-                href="https://www.tunepocket.com/youtube-channel-id-finder/"
+                href="https://ytlarge.com/channel-id-finder"
                 target="_blank"
                 className="text-xs font-semibold text-[#a3254b] hover:underline"
               >
