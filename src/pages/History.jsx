@@ -23,10 +23,11 @@ export default function History() {
   const [hasMoreSearch, setHasMoreSearch] = useState(true);
   const [lastWatchId, setLastWatchId] = useState(null);
   const [lastSearchId, setLastSearchId] = useState(null);
+  const [activeRoleId, setActiveRoleId] = useState(null);
   const navigate = useNavigate();
 
   const fetchWatchHistory = async (startAfterId = null, id) => {
-    if (loadingWatch || !hasMoreWatch) return;
+    if (loadingWatch || !hasMoreWatch || !id) return;
     setLoadingWatch(true);
     try {
       const res = await service.listUserHistory(20, startAfterId, id);
@@ -45,7 +46,7 @@ export default function History() {
   };
 
   const fetchSearchHistory = async (startAfterId = null, id) => {
-    if (loadingSearch || !hasMoreSearch) return;
+    if (loadingSearch || !hasMoreSearch || !id) return;
     setLoadingSearch(true);
     try {
       const res = await service.listUserAllSearches(20, startAfterId, id);
@@ -64,17 +65,30 @@ export default function History() {
   };
 
   useEffect(() => {
-    const init = async () => {
+    const fetchRole = async () => {
       try {
         const { id } = await service.getActiveRole();
-        fetchWatchHistory(null, id);
-        fetchSearchHistory(null, id);
-      } catch {
-        console.log("failed");
+        setActiveRoleId(id);
+      } catch (err) {
+        console.error("Failed to get active role:", err);
       }
     };
-    init();
+    fetchRole();
   }, []);
+
+  useEffect(() => {
+    if (!activeRoleId) return;
+
+    setWatchHistory([]);
+    setSearchHistory([]);
+    setLastWatchId(null);
+    setLastSearchId(null);
+    setHasMoreWatch(true);
+    setHasMoreSearch(true);
+
+    fetchWatchHistory(null, activeRoleId);
+    fetchSearchHistory(null, activeRoleId);
+  }, [activeRoleId]);
 
   const handleDelete = async (id, type) => {
     const setHistory = type === "watch" ? setWatchHistory : setSearchHistory;
@@ -196,7 +210,9 @@ export default function History() {
           )}
           {hasMoreWatch && !loadingWatch && watchHistory.length > 0 && (
             <div className="mt-6 flex justify-center">
-              <Button onClick={() => fetchWatchHistory(lastWatchId)}>
+              <Button
+                onClick={() => fetchWatchHistory(lastWatchId, activeRoleId)}
+              >
                 Load More
               </Button>
             </div>
@@ -236,7 +252,9 @@ export default function History() {
           )}
           {hasMoreSearch && !loadingSearch && searchHistory.length > 0 && (
             <div className="mt-6 flex justify-center">
-              <Button onClick={() => fetchSearchHistory(lastSearchId)}>
+              <Button
+                onClick={() => fetchSearchHistory(lastSearchId, activeRoleId)}
+              >
                 Load More
               </Button>
             </div>
