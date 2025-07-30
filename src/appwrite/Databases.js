@@ -526,7 +526,7 @@ export class Service {
       const execution = await this.functions.createExecution(
         config.appwriteFunctionCreateSession,
         payload,
-        true,
+        false,
       );
 
       if (!execution?.response) {
