@@ -1,6 +1,7 @@
 import config from "../config/config";
 import { ID, Databases, Query, Account, Functions } from "appwrite";
 import client from "./client";
+import { FaHeartPulse } from "react-icons/fa6";
 
 export class Service {
   client;
@@ -526,7 +527,7 @@ export class Service {
       const execution = await this.functions.createExecution(
         config.appwriteFunctionCreateSession,
         payload,
-        true,
+        FaHeartPulse,
       );
       const response = JSON.parse(execution.response);
       if (response.url) {
