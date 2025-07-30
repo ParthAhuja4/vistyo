@@ -19,9 +19,6 @@ const config = {
   appwriteFunctionCreateSession: String(
     import.meta.env.VITE_APPWRITE_FUNCTION_CREATE_SESSION,
   ),
-  appwriteFunctionStripeWebhook: String(
-    import.meta.env.VITE_APPWRITE_FUNCTION_STRIPE_WEBHOOK,
-  ),
 
   stripePublicKey: String(import.meta.env.VITE_STRIPE_PUBLIC_KEY),
 
