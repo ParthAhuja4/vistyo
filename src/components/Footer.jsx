@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 
 export default function Footer() {
+  const year = new Date().getFullYear();
   return (
     <section className="relative overflow-hidden bg-gradient-to-r from-[#b7bfff] to-[#f9af91] dark:from-[#392a82] dark:to-[#783629]">
       <div className="relative z-10 mx-auto max-w-7xl px-4">
         <div className="flex flex-wrap justify-center text-center text-[#2e2e2e] sm:justify-between sm:text-left dark:text-[#fefefe]">
           <div className="flex w-full justify-center p-6 sm:w-1/3 sm:justify-start">
             <div>
-              <div className="text-sm font-medium">&copy; VISTYO 2025</div>
+              <div className="text-sm font-medium">&copy; VISTYO {year}</div>
               <div className="text-sm font-black text-[#2e2e2e] uppercase dark:text-[#ffb1a7]">
                 Made By Parth Ahuja&hearts;
               </div>

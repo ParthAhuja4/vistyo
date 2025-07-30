@@ -15,30 +15,6 @@ export class Service {
     this.functions = new Functions(this.client);
   }
 
-  async createCheckoutSession() {
-    try {
-      const [plan, userId] = await Promise.all([
-        this.getUserPlan(),
-        this.getCurrentUserId(),
-      ]);
-      const payload = JSON.stringify({ userId, planType: plan });
-      const execution = await this.functions.createExecution(
-        config.appwriteFunctionCreateSession,
-        payload,
-        true,
-      );
-      const response = JSON.parse(execution.response);
-      if (response.url) {
-        window.location.href = response.url;
-      } else {
-        throw new Error("Stripe URL not returned");
-      }
-    } catch (err) {
-      console.error("Checkout session error:", err);
-      throw err;
-    }
-  }
-
   async getCurrentUserId() {
     try {
       const user = await this.account.get();
@@ -536,6 +512,30 @@ export class Service {
     } catch (error) {
       console.error("Error listing user history:", error);
       throw error;
+    }
+  }
+
+  async createCheckoutSession() {
+    try {
+      const [plan, userId] = await Promise.all([
+        this.getUserPlan(),
+        this.getCurrentUserId(),
+      ]);
+      const payload = JSON.stringify({ userId, planType: plan });
+      const execution = await this.functions.createExecution(
+        config.appwriteFunctionCreateSession,
+        payload,
+        true,
+      );
+      const response = JSON.parse(execution.response);
+      if (response.url) {
+        window.location.href = response.url;
+      } else {
+        throw new Error("Stripe URL not returned");
+      }
+    } catch (err) {
+      console.error("Checkout session error:", err);
+      throw err;
     }
   }
 }
