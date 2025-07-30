@@ -524,7 +524,7 @@ export class Service {
         contactEmail: user.email,
       });
       const execution = await this.functions.createExecution(
-        config.createCheckoutSessionFunctionId,
+        config.appwriteFunctionCreateSession,
         payload,
         false,
       );
