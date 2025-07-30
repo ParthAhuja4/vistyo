@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { PlanCard } from "../components/index.js";
 import { useSelector } from "react-redux";
+import service from "../appwrite/Databases.js";
 
 const Pricing = () => {
   const plan = useSelector((state) => state.auth.plan);
