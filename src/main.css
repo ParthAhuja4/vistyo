@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: "Serico";
+  src: url("/Serico-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
