@@ -524,11 +524,26 @@ export class Service {
         contactEmail: user.email,
       });
       const execution = await this.functions.createExecution(
-        config.appwriteFunctionCreateSession,
+        config.createCheckoutSessionFunctionId,
         payload,
         false,
       );
-      const response = JSON.parse(execution.response);
+
+      if (!execution?.response) {
+        console.error("Empty response from checkout function:", execution);
+        throw new Error("Empty response from createCheckoutSession function");
+      }
+      let response;
+      try {
+        response = JSON.parse(execution.response);
+      } catch (err) {
+        console.error(
+          "Invalid JSON in checkout session response:",
+          execution.response,
+        );
+        throw new Error("Invalid JSON from createCheckoutSession function");
+      }
+
       if (response.url) {
         window.location.href = response.url;
       } else {
