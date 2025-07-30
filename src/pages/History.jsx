@@ -25,11 +25,11 @@ export default function History() {
   const [lastSearchId, setLastSearchId] = useState(null);
   const navigate = useNavigate();
 
-  const fetchWatchHistory = async (startAfterId = null) => {
+  const fetchWatchHistory = async (startAfterId = null, id) => {
     if (loadingWatch || !hasMoreWatch) return;
     setLoadingWatch(true);
     try {
-      const res = await service.listUserHistory(20, startAfterId);
+      const res = await service.listUserHistory(20, startAfterId, id);
       const docs = res.documents || [];
       const newDocs = docs.filter(
         (doc) => !watchHistory.find((d) => d.$id === doc.$id),
@@ -44,11 +44,11 @@ export default function History() {
     }
   };
 
-  const fetchSearchHistory = async (startAfterId = null) => {
+  const fetchSearchHistory = async (startAfterId = null, id) => {
     if (loadingSearch || !hasMoreSearch) return;
     setLoadingSearch(true);
     try {
-      const res = await service.listUserAllSearches(20, startAfterId);
+      const res = await service.listUserAllSearches(20, startAfterId, id);
       const docs = res.documents || [];
       const newDocs = docs.filter(
         (doc) => !searchHistory.find((d) => d.$id === doc.$id),
@@ -64,8 +64,16 @@ export default function History() {
   };
 
   useEffect(() => {
-    fetchWatchHistory();
-    fetchSearchHistory();
+    const init = async () => {
+      try {
+        const { id } = await service.getActiveRole();
+        fetchWatchHistory(null, id);
+        fetchSearchHistory(null, id);
+      } catch {
+        console.log("failed");
+      }
+    };
+    init();
   }, []);
 
   const handleDelete = async (id, type) => {

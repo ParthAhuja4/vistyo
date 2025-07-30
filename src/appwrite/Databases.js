@@ -382,17 +382,16 @@ export class Service {
     }
   }
 
-  async listUserAllSearches(limit = 50, lastDocId = null) {
+  async listUserAllSearches(limit = 50, lastDocId = null, id) {
     try {
-      const [role, plan, userId] = await Promise.all([
-        this.getActiveRole(),
+      const [plan, userId] = await Promise.all([
         this.getUserPlan(),
         this.getCurrentUserId(),
       ]);
       if (plan !== "unlimited") throw new Error("NOT AUTHORISED");
       const queries = [
         Query.equal("userId", userId),
-        Query.equal("roleId", role.id),
+        Query.equal("roleId", id),
         Query.orderDesc("createdAt"),
         Query.limit(limit),
       ];
@@ -487,7 +486,7 @@ export class Service {
     }
   }
 
-  async listUserHistory(limit = 50, cursorId = null) {
+  async listUserHistory(limit = 50, cursorId = null, id) {
     try {
       const [plan, userId] = await Promise.all([
         this.getUserPlan(),
@@ -496,6 +495,7 @@ export class Service {
       if (plan !== "unlimited") throw new Error("NOT AUTHORISED");
       const queries = [
         Query.equal("userId", userId),
+        Query.equal("roleId", id),
         Query.orderDesc("createdAt"),
         Query.limit(limit),
       ];
