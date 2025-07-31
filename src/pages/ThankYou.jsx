@@ -38,15 +38,15 @@ const ThankYou = () => {
     );
   }
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white p-6">
+    <div className="flex min-h-screen items-center justify-center p-6">
       <div className="w-full max-w-md rounded-2xl border p-6 text-center shadow">
         <h1 className="text-2xl font-bold text-green-600">🎉 Thank you!</h1>
-        <p className="mt-2 text-gray-700">Your payment was successful.</p>
+        <p className="mt-2 text-gray-500">Your payment was successful.</p>
         <a
-          href="/app"
+          href="/login"
           className="mt-6 inline-block rounded bg-blue-600 px-4 py-2 text-white"
         >
-          Go to Dashboard
+          Search
         </a>
       </div>
     </div>
