@@ -16,7 +16,7 @@ const PlanCard = ({
           <li key={i}>{item}</li>
         ))}
       </ul>
-      {onBuy && (
+      {onBuy && buttonLabel && (
         <Button onClick={onBuy} variant="primary" className="w-full text-sm">
           {buttonLabel}
         </Button>
