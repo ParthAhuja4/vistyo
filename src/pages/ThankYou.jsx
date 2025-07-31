@@ -32,7 +32,7 @@ const ThankYou = () => {
   if (!isAllowed) {
     return (
       <div className="p-8 text-center text-red-600">
-        <h1 className="text-2xl font-bold">Access Denied</h1>
+        <h1 className="text-2xl font-bold">Access Denied Payment Failed</h1>
         <p>This page is only available right after successful payment.</p>
       </div>
     );
