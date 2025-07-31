@@ -23,7 +23,7 @@ export default function Footer() {
               <ul>
                 <li className="mb-4">
                   <a
-                    href="/readme"
+                    href="https://github.com/ParthAhuja4/vistyo/blob/main/README.md"
                     target="_blank"
                     className="text-base font-medium text-gray-900 transition hover:text-gray-700 dark:text-[#fefefe] dark:hover:text-gray-300"
                   >
