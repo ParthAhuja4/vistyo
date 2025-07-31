@@ -6,6 +6,9 @@ import DOMPurify from "dompurify";
 import { Input, Button } from "../components/index.js";
 import authService from "../appwrite/auth.js";
 import { Header, Footer } from "../components/index.js";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/authSlice.js";
+import { clearVideos } from "../store/videoSlice.js";
 
 function Login() {
   const navigate = useNavigate();
@@ -16,6 +19,7 @@ function Login() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm();
+  const dispatch = useDispatch();
 
   const onSubmit = async ({ email, password }) => {
     const safeEmail = DOMPurify.sanitize(email);
@@ -37,6 +41,8 @@ function Login() {
         await new Promise((r) => setTimeout(r, 200));
       }
     } catch (err) {
+      dispatch(logout());
+      dispatch(clearVideos());
       console.error(err);
       return alert("LOGIN FAILED. PLEASE ENTER CORRECT CREDENTIALS.");
     } finally {

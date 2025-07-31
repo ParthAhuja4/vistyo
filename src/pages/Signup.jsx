@@ -6,6 +6,9 @@ import { Input, Button } from "../components/index.js";
 import authService from "../appwrite/auth.js";
 import { Header, Footer } from "../components/index.js";
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/authSlice.js";
+import { clearVideos } from "../store/videoSlice.js";
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +19,7 @@ function Signup() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onSubmit = async ({ email, password, name }) => {
     const safeName = DOMPurify.sanitize(name);
@@ -25,6 +29,8 @@ function Signup() {
       await authService.createAccount(safeEmail, safePassword, safeName);
       navigate("/app/search");
     } catch {
+      dispatch(logout());
+      dispatch(clearVideos());
       return alert("SIGNUP FAILED PLEASE USE DIFFICULT PASSWORD");
     } finally {
       reset();
