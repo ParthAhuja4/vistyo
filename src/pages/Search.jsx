@@ -76,7 +76,7 @@ export default function Search() {
       if (!relevant) return alert("NO IRRELEVANT QUERIES!");
       const activeChannelFilters = await service.listActiveChannelFilters(id);
       if (!activeChannelFilters.length) return;
-      const searchResults = await ytSearch(q, 50, activeChannelFilters);
+      const searchResults = await ytSearch(q, 100, activeChannelFilters);
       setSearchQuery(q);
       setVideos(searchResults);
       dispatch(

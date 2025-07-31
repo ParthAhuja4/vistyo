@@ -1,29 +1,63 @@
 import config from "../config/config";
 
-export const search = async (query, maxResults = 15, channelFilters = []) => {
-  const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=${maxResults}&key=${config.ytApiKey}`;
-  const searchResponse = await fetch(searchUrl);
-  if (!searchResponse.ok) {
-    throw new Error(`YouTube Search API failed: ${searchResponse.status}`);
+export const search = async (query, maxResults = 100, channelFilters = []) => {
+  const fetchSearchPage = async (pageToken = "") => {
+    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=50${pageToken ? `&pageToken=${pageToken}` : ""}&key=${config.ytApiKey}`;
+    const response = await fetch(searchUrl);
+    if (!response.ok) {
+      throw new Error(`YouTube Search API failed: ${response.status}`);
+    }
+    return await response.json();
+  };
+
+  let collectedItems = [];
+  let nextPageToken = "";
+
+  while (collectedItems.length < maxResults) {
+    const searchData = await fetchSearchPage(nextPageToken);
+
+    const filteredItems = searchData.items.filter(
+      (item) =>
+        item.id.videoId &&
+        (!channelFilters.length ||
+          channelFilters.includes(item.snippet.channelId)),
+    );
+
+    collectedItems = [...collectedItems, ...filteredItems];
+
+    if (!searchData.nextPageToken || collectedItems.length >= maxResults) {
+      break;
+    }
+
+    nextPageToken = searchData.nextPageToken;
   }
-  const searchData = await searchResponse.json();
 
-  const filteredItems = searchData.items.filter(
-    (item) =>
-      item.id.videoId &&
-      (!channelFilters.length ||
-        channelFilters.includes(item.snippet.channelId)),
-  );
+  // Trim to desired maxResults count if necessary
+  collectedItems = collectedItems.slice(0, maxResults);
 
-  const videoIds = filteredItems.map((item) => item.id.videoId);
+  const videoIds = collectedItems.map((item) => item.id.videoId);
   if (videoIds.length === 0) return [];
 
-  const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoIds.join(",")}&key=${config.ytApiKey}`;
-  const videosResponse = await fetch(videosUrl);
-  if (!videosResponse.ok) {
-    throw new Error(`YouTube Videos API failed: ${videosResponse.status}`);
+  // Batch video IDs into chunks of 50
+  const videoIdBatches = [];
+  for (let i = 0; i < videoIds.length; i += 50) {
+    videoIdBatches.push(videoIds.slice(i, i + 50));
   }
-  const videosData = await videosResponse.json();
+
+  // Fetch video details in parallel using Promise.all
+  const videoDetailsResponses = await Promise.all(
+    videoIdBatches.map(async (batch) => {
+      const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${batch.join(",")}&key=${config.ytApiKey}`;
+      const response = await fetch(videosUrl);
+      if (!response.ok) {
+        throw new Error(`YouTube Videos API failed: ${response.status}`);
+      }
+      return await response.json();
+    }),
+  );
+
+  // Flatten all fetched video details into a single array
+  const videoDetails = videoDetailsResponses.flatMap((res) => res.items);
 
   const parseDuration = (iso) => {
     const match = iso?.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
@@ -33,9 +67,9 @@ export const search = async (query, maxResults = 15, channelFilters = []) => {
     return `${h ? `${h}:` : ""}${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
   };
 
-  return filteredItems.map((item) => {
+  return collectedItems.map((item) => {
     const videoId = item.id.videoId;
-    const videoDetails = videosData.items.find((v) => v.id === videoId);
+    const videoDetail = videoDetails.find((v) => v.id === videoId);
 
     return {
       videoId,
@@ -44,7 +78,7 @@ export const search = async (query, maxResults = 15, channelFilters = []) => {
       channelId: item.snippet.channelId,
       channelName: item.snippet.channelTitle,
       thumbnail: item.snippet.thumbnails.high.url,
-      duration: parseDuration(videoDetails?.contentDetails?.duration ?? ""),
+      duration: parseDuration(videoDetail?.contentDetails?.duration ?? ""),
     };
   });
 };
