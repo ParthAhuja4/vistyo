@@ -24,6 +24,9 @@ import {
   Route,
 } from "react-router-dom";
 import { PublicRoute } from "./components/index.js";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -68,5 +71,7 @@ createRoot(document.getElementById("root")).render(
         <RouterProvider router={router} />
       </Provider>
     </ThemeProvider>
+    <SpeedInsights />
+    <Analytics />
   </StrictMode>,
 );
