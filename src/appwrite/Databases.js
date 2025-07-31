@@ -529,17 +529,18 @@ export class Service {
         false,
       );
 
-      if (!execution?.response) {
+      if (!execution?.responseBody) {
         console.error("Empty response from checkout function:", execution);
         throw new Error("Empty response from createCheckoutSession function");
       }
+
       let response;
       try {
-        response = JSON.parse(execution.response);
+        response = JSON.parse(execution.responseBody);
       } catch (err) {
         console.error(
           "Invalid JSON in checkout session response:",
-          execution.response,
+          execution.responseBody,
         );
         throw new Error("Invalid JSON from createCheckoutSession function");
       }
