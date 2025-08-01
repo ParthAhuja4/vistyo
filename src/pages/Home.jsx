@@ -137,10 +137,6 @@ export default function Home() {
               onBuy={() => navigate("/app/pricing")}
             />
           </div>
-
-          <p className="mt-4 text-center text-sm text-gray-700 dark:text-gray-300">
-            Only pay the difference when you upgrade — no hidden fees.
-          </p>
         </section>
       </main>
       <Footer />
