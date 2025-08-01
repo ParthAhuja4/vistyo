@@ -81,7 +81,7 @@ export default function Home() {
           />
           <FeatureCard
             title="Smart Pricing"
-            description="Only pay the difference when upgrading your plan. Start small, scale when you're ready."
+            description="Monthly Plans. Start small, scale when you're ready."
           />
           <FeatureCard
             title="Fast & Seamless"
