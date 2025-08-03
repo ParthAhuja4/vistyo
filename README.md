@@ -313,6 +313,47 @@ Deploy these core functions with environment variables:
 2. `stripe-webhook` (Subscription lifecycle)
 3. `autocomplete` (YouTube Suggest API proxy)
 
+## Successful Payment Cards For Stripe
+
+**Visa**  
+`4242 4242 4242 4242`  
+- Expiry: Any future date (e.g., 12/34)  
+- CVC: Any 3 digits (e.g., 123)  
+- ZIP: Any 5 digits (e.g., 94107)  
+
+**Mastercard**  
+`5555 5555 5555 4444`  
+- Expiry: Any future date  
+- CVC: Any 3 digits  
+- ZIP: Any  
+
+**American Express**  
+`3782 822463 10005`  
+- Expiry: Any future date  
+- CVC: Any 4 digits  
+- ZIP: Any  
+
+**Discover**  
+`6011 1111 1111 1117`  
+- Expiry: Any future date  
+- CVC: Any 3 digits  
+- ZIP: Any  
+
+**JCB**  
+`3566 1111 1111 1113`  
+- Expiry: Any future date  
+- CVC: Any 3 digits  
+- ZIP: Any  
+
+**Diners Club**  
+`3056 930902 5904`  
+- Expiry: Any future date  
+- CVC: Any 3 digits  
+- ZIP: Any  
+
+---
+
+
 ## Contact
 
 **Developer:** Parth Ahuja  
