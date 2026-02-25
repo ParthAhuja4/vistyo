@@ -17,7 +17,7 @@ export default async function queryRelevance(userQuery, roleKeywords) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "command-r-plus",
+        model: "command-r-08-2024",
         temperature: 0,
         message: userQuery,
         preamble: systemPrompt,
