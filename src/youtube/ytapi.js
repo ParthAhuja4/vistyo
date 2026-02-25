@@ -1,9 +1,13 @@
 import config from "../config/config";
-
+const DEPLOYED_DOMAIN = "https://vistyo.vercel.app";
 export const search = async (query, maxResults = 100, channelFilters = []) => {
   const fetchSearchPage = async (pageToken = "") => {
     const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=50${pageToken ? `&pageToken=${pageToken}` : ""}&key=${config.ytApiKey}`;
-    const response = await fetch(searchUrl);
+    const response = await fetch(searchUrl, {
+    headers: {
+      "Referer": DEPLOYED_DOMAIN
+    }
+  });
     if (!response.ok) {
       throw new Error(`YouTube Search API failed: ${response.status}`);
     }
@@ -48,7 +52,11 @@ export const search = async (query, maxResults = 100, channelFilters = []) => {
   const videoDetailsResponses = await Promise.all(
     videoIdBatches.map(async (batch) => {
       const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${batch.join(",")}&key=${config.ytApiKey}`;
-      const response = await fetch(videosUrl);
+      const response = await fetch(videosUrl, {
+    headers: {
+      "Referer": DEPLOYED_DOMAIN
+    }
+  });
       if (!response.ok) {
         throw new Error(`YouTube Videos API failed: ${response.status}`);
       }
@@ -88,7 +96,11 @@ export const search = async (query, maxResults = 100, channelFilters = []) => {
 export const fetchComments = async (videoId, channelId) => {
   const commentThreadsUrl = `https://www.googleapis.com/youtube/v3/commentThreads?part=snippet,replies&videoId=${videoId}&maxResults=100&key=${config.ytApiKey}`;
 
-  const res = await fetch(commentThreadsUrl);
+  const res = await fetch(commentThreadsUrl, {
+    headers: {
+      "Referer": DEPLOYED_DOMAIN
+    }
+  });
   if (!res.ok) {
     throw new Error(`YouTube API error: ${res.status} ${res.statusText}`);
   }
